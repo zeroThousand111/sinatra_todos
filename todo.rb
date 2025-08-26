@@ -48,3 +48,10 @@ end
 get "/lists/new" do
   erb :new_list, layout: :layout
 end
+
+# Display Contents of a list
+get "/lists/:id" do
+  id = params[:id].to_i
+  @list = session[:lists][id]
+  erb :list, layout: :layout
+end
