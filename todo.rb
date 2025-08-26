@@ -9,9 +9,9 @@ end
 
 before do
   session[:lists] ||= []
-end 
+end
 
-get "/" do 
+get "/" do
   redirect "/lists"
 end
 
@@ -27,19 +27,18 @@ def error_for_list_name(name)
     "List name must be between 1 and 100 characters."
   elsif session[:lists].any? { |list| list[:name] == name }
     "List name must be unique."
-  else
-    nil
   end
 end
 
 # Create a new list
 post "/lists" do
   list_name = params[:list_name].strip
-  if error = error_for_list_name(list_name)
+  error = error_for_list_name(list_name)
+  if error # is truthy
     session[:error] = error
     erb :new_list, layout: :layout
   else
-    session[:lists] << {name: list_name, todos: []}
+    session[:lists] << { name: list_name, todos: [] }
     session[:success] = "The list has been created."
     redirect "/lists"
   end
