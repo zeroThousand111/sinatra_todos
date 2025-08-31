@@ -69,7 +69,12 @@ def error_for_todo(name)
   if !(1..100).cover? name.size
     "Todo must be between 1 and 100 characters."
   end
-end 
+end
+
+# Check if URL list ID exists
+def valid_list_id?(list_id)
+  list_id <= (session[:lists].size - 1)
+end
 
 # Create a new list
 post "/lists" do
@@ -93,6 +98,12 @@ end
 # Display Contents of a list
 get "/lists/:id" do
   @list_id = params[:id].to_i
+
+  unless valid_list_id?(@list_id)
+    session[:error] = "The specified list was not found."
+    redirect "/lists" 
+  end
+
   @list = session[:lists][@list_id]
   erb :list, layout: :layout
 end
